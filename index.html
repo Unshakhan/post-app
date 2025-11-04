@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="signUpDiv">
+    <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
+        >
+        <div class="modal-dialog">
+            <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                    <h1 class="mx-auto fw-bold mb-0 fs-2 ">Sign up for free</h1> 
+                </div>
+                <div class="modal-body p-5 pt-0">
+                    <form class="">
+                         <div class="form-floating mb-3"> <input type="text" class="form-control rounded-3"
+                                id="floatingFirstName" placeholder="First Name"> <label
+                                for="floatingFirstName">First Name</label> </div>
+                                  <div class="form-floating mb-3"> <input type="text" class="form-control rounded-3"
+                                id="floatingLastName" placeholder="Last Name"> <label
+                                for="floatingLastName">Last Name</label> </div>
+                        <div class="form-floating mb-3"> <input type="email" class="form-control rounded-3"
+                                id="floatingInput" placeholder="name@example.com"> <label for="floatingInput">Email
+                                address</label> </div>
+                        <div class="form-floating mb-3"> <input type="password" class="form-control rounded-3"
+                                id="floatingPassword" placeholder="Password"> <label
+                                for="floatingPassword">Password</label> </div>
+                                
+                                <button
+                            class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitInfo(event)">Sign up</button> <small
+                            class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+                        <hr class="my-4">
+                      
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- ========================================== -->
+     <div class="container my-5">
+
+  <div class="card shadow p-4" style="max-width: 450px; margin:auto;">
+      
+      <h4 class="mb-3 text-center fw-bold">Your Post</h4>
+
+      <!-- Input Fields -->
+      <div class="mb-3">
+        <label class="form-label">Topic</label>
+        <input type="text" id="topicInput" class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">comment</label>
+        <input type="email"  id="commentInput" class="form-control">
+      </div>
+
+      <hr>
+
+      <!-- Small Clickable Images -->
+      <p class="mb-1 fw-semibold">Select background:</p>
+
+      <div class="d-flex gap-2 flex-wrap">
+
+        <img src="https://img.freepik.com/free-vector/neutral-watercolor-background_23-2150564038.jpg?semt=ais_hybrid&w=740&q=80" width="80px"
+             class="img-thumbnail avatar-img" onclick="selectAvatar(this)" >
+        
+        <img src="https://media.istockphoto.com/id/1661184650/vector/autumn-leaves-background.jpg?s=612x612&w=0&k=20&c=RLVv440s9cf1YACDwti6OGmJ77VWT-NMaZUEiHic5mY=" width="80px"
+             class="img-thumbnail avatar-img" onclick="selectAvatar(this)">
+        
+        <img src="https://i.pinimg.com/736x/74/4b/40/744b40d8807b31e44e875456ed163c58.jpg" width="80px"
+             class="img-thumbnail avatar-img" onclick="selectAvatar(this)">
+        
+        <img src="https://t4.ftcdn.net/jpg/09/46/17/07/360_F_946170714_b6KOvYbSS39TJ5d0rSjffDQttzKIxyFm.jpg" width="80px"
+             class="img-thumbnail avatar-img" onclick="selectAvatar(this)">
+      
+      </div>
+
+     <button class="btn btn-primary w-100 mt-3" onclick="createPost()">Save</button>
+
+  </div>
+
+</div>
+<!-- ============================== -->
+<!-- POST WILL APPEAR HERE -->
+<div id="postContainer" class="mt-5"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+        <script src="app.js"></script>
+</body>
+
+</html>
