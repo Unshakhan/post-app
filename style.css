@@ -36,3 +36,13 @@
   background: #43a047 !important;
   transform: scale(1.2);
 }
+#mainNav {
+  height: 80px; /* bigger than your 100px image */
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+#mypostimg{
+  position: absolute;
+top: -34px;
+}
