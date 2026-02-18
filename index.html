@@ -40,8 +40,8 @@
                                 for="floatingPassword">Password</label> </div>
                                 
                                 <button
-                            class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitInfo(event)">Sign up</button> <small
-                            class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+                            class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitInfo(event)">Sign up</button> 
+                            <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
                         <hr class="my-4">
                       
                     </form>
@@ -75,7 +75,7 @@
       <!-- Small Clickable Images -->
       <p class="mb-1 fw-semibold">Select background:</p>
 
-      <div class="d-flex gap-2 flex-wrap">
+      <div class="d-flex gap-2 " style="overflow-x: scroll;">
 
         <img src="https://img.freepik.com/free-vector/neutral-watercolor-background_23-2150564038.jpg?semt=ais_hybrid&w=740&q=80" width="80px"
              class="img-thumbnail avatar-img" id="bg1" onclick="selectAvatar(this)" >
@@ -89,9 +89,15 @@
         <img src="https://t4.ftcdn.net/jpg/09/46/17/07/360_F_946170714_b6KOvYbSS39TJ5d0rSjffDQttzKIxyFm.jpg" width="80px"
              class="img-thumbnail avatar-img" id="bg4" onclick="selectAvatar(this)">
       
+        <img src="https://i.pinimg.com/736x/6e/64/8c/6e648c87a585a8c9795fe238378b17f9.jpg" width="80px"
+             class="img-thumbnail avatar-img" id="bg5" onclick="selectAvatar(this)">
+      
+        <img src="https://thumbs.dreamstime.com/b/sparkly-kawaii-bubble-tea-cute-face-straw-dreamy-pink-background-glittery-smiling-soft-focus-concept-drink-398264087.jpg" width="80px"
+             class="img-thumbnail avatar-img" id="bg6" onclick="selectAvatar(this)">
+      
       </div>
 
-     <button class="btn btn-primary w-100 mt-3" id="savebtn" onclick="createPost()">Save</button>
+     <button class="btn  w-100 mt-3" id="savebtn" onclick="createPost()">Save</button>
 
   </div>
 
@@ -101,6 +107,9 @@
 <div id="postContainer" class="mt-5 col-7"></div>
   </div>
      </div>
+     <!-- supabase cdn -->
+     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+     <!-- sweet alert cdn -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
