@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard — Post App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #f4f6fb;
+      min-height: 100vh;
+    }
+
+    /* ── Admin Navbar ── */
+    #adminNav {
+      background-image: linear-gradient(135deg, rgb(176, 0, 18) 0%, rgb(255, 97, 100) 50%, rgb(255, 255, 196) 100%);
+      height: 80px;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 16px rgba(176,0,18,0.15);
+    }
+    #adminNav .brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    }
+    #adminNav .admin-badge {
+      background: white;
+      color: rgb(176, 0, 18);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    #adminNav .logout-btn {
+      background: rgba(255,255,255,0.18);
+      border: 2px solid rgba(255,255,255,0.7);
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 6px 20px;
+      transition: all 0.2s;
+    }
+    #adminNav .logout-btn:hover {
+      background: white;
+      color: rgb(176, 0, 18);
+    }
+
+    /* ── Stat Cards ── */
+    .stat-card {
+      border-radius: 18px;
+      border: none;
+      padding: 28px 24px;
+      color: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .stat-card .stat-icon {
+      font-size: 42px;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      opacity: 0.22;
+    }
+    .stat-card .stat-number {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-card .stat-label {
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0.88;
+      margin-top: 6px;
+    }
+    .stat-card.red    { background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100)); }
+    .stat-card.dark   { background: linear-gradient(135deg, #2d2d2d, #555); }
+    .stat-card.blue   { background: linear-gradient(135deg, #185FA5, #378ADD); }
+    .stat-card.green  { background: linear-gradient(135deg, #3B6D11, #639922); }
+    .stat-card.purple { background: linear-gradient(135deg, #534AB7, #7F77DD); }
+    .stat-card.orange { background: linear-gradient(135deg, #854F0B, #EF9F27); }
+
+    /* ── Section Title ── */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      padding-left: 4px;
+      border-left: 4px solid rgb(176, 0, 18);
+      padding-left: 12px;
+    }
+
+    /* ── Table ── */
+    .admin-table-wrap {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+    .admin-table thead {
+      background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100));
+      color: white;
+    }
+    .admin-table thead th {
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      border: none;
+      padding: 14px 16px;
+    }
+    .admin-table tbody tr {
+      transition: background 0.15s;
+    }
+    .admin-table tbody tr:hover {
+      background: #fff5f5;
+    }
+    .admin-table tbody td {
+      vertical-align: middle;
+      font-size: 14px;
+      padding: 13px 16px;
+      border-color: #f0f0f0;
+    }
+
+    /* ── User Avatar Initial ── */
+    .user-initial {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100));
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    /* ── Badges ── */
+    .badge-post  { background: #e8f5e9; color: #2e7d32; font-size: 12px; border-radius: 20px; padding: 4px 12px; font-weight: 600; }
+    .badge-like  { background: #fce4ec; color: #c62828; font-size: 12px; border-radius: 20px; padding: 4px 12px; font-weight: 600; }
+    .badge-del   { background: #fff3e0; color: #e65100; font-size: 12px; border-radius: 20px; padding: 4px 12px; font-weight: 600; }
+    .badge-com   { background: #e3f2fd; color: #1565c0; font-size: 12px; border-radius: 20px; padding: 4px 12px; font-weight: 600; }
+
+    /* ── Post Preview Card ── */
+    .post-mini {
+      border-radius: 12px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      min-height: 90px;
+      position: relative;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .post-mini-overlay {
+      background: rgba(0,0,0,0.45);
+      padding: 12px;
+      height: 100%;
+      min-height: 90px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .post-mini-title {
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Delete Log ── */
+    .del-log-item {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+      border-left: 4px solid rgb(255, 97, 100);
+    }
+    .del-log-icon {
+      font-size: 22px;
+    }
+    .del-log-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .del-log-meta {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* ── Loading Spinner ── */
+    .admin-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      color: #888;
+      gap: 14px;
+    }
+    .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f0f0f0;
+      border-top: 4px solid rgb(176, 0, 18);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Tabs ── */
+    .admin-tabs .nav-link {
+      color: #555;
+      font-weight: 600;
+      border-radius: 10px 10px 0 0;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+    }
+    .admin-tabs .nav-link.active {
+      background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100));
+      color: white;
+    }
+
+    /* ── Search bar ── */
+    .admin-search {
+      border-radius: 10px;
+      border: 1.5px solid #e0e0e0;
+      padding: 8px 16px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+      width: 240px;
+    }
+    .admin-search:focus {
+      border-color: rgb(176, 0, 18);
+    }
+
+    /* ── Action buttons ── */
+    .btn-admin-del {
+      background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .btn-admin-del:hover { opacity: 0.85; color: white; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .stat-number { font-size: 30px !important; }
+      .admin-search { width: 100%; }
+    }
+
+    /* ── Welcome bar ── */
+    .welcome-bar {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      margin-bottom: 28px;
+    }
+    .welcome-bar .admin-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgb(176, 0, 18), rgb(255, 97, 100));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .welcome-bar .welcome-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .welcome-bar .welcome-sub {
+      font-size: 13px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ ADMIN NAVBAR ══════════ -->
+  <nav id="adminNav">
+    <div class="container-fluid d-flex align-items-center gap-3 px-4">
+      <span class="brand">⚙️ Post App</span>
+      <span class="admin-badge">Admin</span>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span id="navAdminName" style="color:white; font-weight:600; font-size:14px;"></span>
+        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════ MAIN CONTENT ══════════ -->
+  <div class="container-fluid px-3 px-md-5 py-4">
+
+    <!-- Welcome Bar -->
+    <div class="welcome-bar">
+      <div class="admin-avatar" id="adminAvatarInitial">A</div>
+      <div>
+        <div class="welcome-text" id="welcomeName">Welcome, Admin 👋</div>
+        <div class="welcome-sub" id="welcomeSub">Here's what's happening on your platform today.</div>
+      </div>
+      <div class="ms-auto text-end d-none d-md-block">
+        <div style="font-size:13px; color:#aaa;" id="currentDateTime"></div>
+      </div>
+    </div>
+
+    <!-- ── STAT CARDS ── -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card red">
+          <span class="stat-icon">👥</span>
+          <div class="stat-number" id="statUsers">—</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card blue">
+          <span class="stat-icon">📝</span>
+          <div class="stat-number" id="statPosts">—</div>
+          <div class="stat-label">Total Posts</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card green">
+          <span class="stat-icon">❤️</span>
+          <div class="stat-number" id="statLikes">—</div>
+          <div class="stat-label">Total Likes</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card purple">
+          <span class="stat-icon">💬</span>
+          <div class="stat-number" id="statComments">—</div>
+          <div class="stat-label">Total Comments</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card orange">
+          <span class="stat-icon">🗑️</span>
+          <div class="stat-number" id="statDeleted">—</div>
+          <div class="stat-label">Posts Deleted</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card dark">
+          <span class="stat-icon">🔥</span>
+          <div class="stat-number" id="statTopLikes">—</div>
+          <div class="stat-label">Most Liked Post</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TABS ── -->
+    <ul class="nav admin-tabs mb-0" id="adminTabs">
+      <li class="nav-item"><a class="nav-link active" href="#" onclick="showTab('users', this)">👥 Users</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" onclick="showTab('posts', this)">📝 All Posts</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" onclick="showTab('deletelog', this)">🗑️ Delete Log</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" onclick="showTab('mostliked', this)">🏆 Top Posts</a></li>
+    </ul>
+
+    <!-- ── USERS TAB ── -->
+    <div id="tab-users" class="tab-pane-admin">
+      <div class="admin-table-wrap">
+        <div class="d-flex align-items-center justify-content-between p-3 pb-0 flex-wrap gap-2">
+          <div class="section-title mb-0">All Users</div>
+          <input class="admin-search" type="text" placeholder="🔍 Search by name or email..." oninput="filterUsersTable(this.value)">
+        </div>
+        <div class="p-3">
+          <div id="usersTableWrap">
+            <div class="admin-spinner"><div class="spinner-ring"></div><span>Loading users...</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── POSTS TAB ── -->
+    <div id="tab-posts" class="tab-pane-admin" style="display:none;">
+      <div class="admin-table-wrap">
+        <div class="d-flex align-items-center justify-content-between p-3 pb-0 flex-wrap gap-2">
+          <div class="section-title mb-0">All Posts</div>
+          <input class="admin-search" type="text" placeholder="🔍 Search posts..." oninput="filterPostsTable(this.value)">
+        </div>
+        <div class="p-3">
+          <div id="postsTableWrap">
+            <div class="admin-spinner"><div class="spinner-ring"></div><span>Loading posts...</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DELETE LOG TAB ── -->
+    <div id="tab-deletelog" class="tab-pane-admin" style="display:none;">
+      <div class="section-title">Delete Log</div>
+      <div id="deleteLogWrap">
+        <div class="admin-spinner"><div class="spinner-ring"></div><span>Loading delete log...</span></div>
+      </div>
+    </div>
+
+    <!-- ── MOST LIKED TAB ── -->
+    <div id="tab-mostliked" class="tab-pane-admin" style="display:none;">
+      <div class="section-title">🏆 Top 10 Most Liked Posts</div>
+      <div id="mostLikedWrap">
+        <div class="admin-spinner"><div class="spinner-ring"></div><span>Loading top posts...</span></div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+  <script type="module">
+    import supabase from "./supabase.js";
+
+    // ── Auth guard ──────────────────────────────────────────
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'INITIAL_SESSION') {
+        if (!session) {
+          sessionStorage.setItem("showLogin", "true");
+          window.location.href = "./form.html"; return;
+        }
+        const { data: profile } = await supabase.from("profiles")
+          .select("role, first_name, last_name").eq("id", session.user.id).single();
+
+        if (!profile || profile.role !== "admin") {
+          window.location.href = "./index.html"; return;
+        }
+
+        // Set welcome info
+        const fn = profile.first_name || "Admin";
+        const ln = profile.last_name  || "";
+        document.getElementById("welcomeName").textContent = `Welcome, ${fn} ${ln} 👋`;
+        document.getElementById("navAdminName").textContent = `${fn} ${ln}`;
+        document.getElementById("adminAvatarInitial").textContent = fn.charAt(0).toUpperCase();
+        document.getElementById("welcomeSub").textContent =
+          `Logged in as admin · ${session.user.email}`;
+
+        // Load everything
+        loadStats();
+        loadUsersTable();
+        loadPostsTable();
+        loadDeleteLog();
+        loadMostLiked();
+        startClock();
+      }
+      if (event === 'SIGNED_OUT') {
+        sessionStorage.clear();
+        window.location.href = "./form.html";
+      }
+    });
+
+    // ── Clock ───────────────────────────────────────────────
+    function startClock() {
+      function tick() {
+        document.getElementById("currentDateTime").textContent =
+          new Date().toLocaleString('en-PK', { dateStyle: 'medium', timeStyle: 'short' });
+      }
+      tick(); setInterval(tick, 60000);
+    }
+
+    // ── Stats ───────────────────────────────────────────────
+    async function loadStats() {
+      // Users count
+      const { count: userCount } = await supabase.from("profiles")
+        .select("*", { count: "exact", head: true }).neq("role", "admin");
+      document.getElementById("statUsers").textContent = userCount ?? 0;
+
+      // Posts count
+      const { count: postCount } = await supabase.from("post_crud")
+        .select("*", { count: "exact", head: true });
+      document.getElementById("statPosts").textContent = postCount ?? 0;
+
+      // Likes count
+      const { count: likeCount } = await supabase.from("likes")
+        .select("*", { count: "exact", head: true });
+      document.getElementById("statLikes").textContent = likeCount ?? 0;
+
+      // Comments count
+      const { count: commentCount } = await supabase.from("comments")
+        .select("*", { count: "exact", head: true });
+      document.getElementById("statComments").textContent = commentCount ?? 0;
+
+      // Deleted posts count
+      const { count: delCount } = await supabase.from("deleted_posts_log")
+        .select("*", { count: "exact", head: true });
+      document.getElementById("statDeleted").textContent = delCount ?? 0;
+
+      // Most likes on a single post
+      const { data: allLikes } = await supabase.from("likes").select("post_id");
+      if (allLikes && allLikes.length > 0) {
+        const freq = {};
+        allLikes.forEach(l => { freq[l.post_id] = (freq[l.post_id] || 0) + 1; });
+        const max = Math.max(...Object.values(freq));
+        document.getElementById("statTopLikes").textContent = max;
+      } else {
+        document.getElementById("statTopLikes").textContent = 0;
+      }
+    }
+
+    // ── Users Table ─────────────────────────────────────────
+    let allUsersData = [];
+
+    async function loadUsersTable() {
+      const { data: profiles } = await supabase.from("profiles")
+        .select("*").neq("role", "admin").order("created_at", { ascending: false });
+
+      const { data: posts }    = await supabase.from("post_crud").select("user_id");
+      const { data: likes }    = await supabase.from("likes").select("post_id, user_id");
+      const { data: comments } = await supabase.from("comments").select("user_id");
+      const { data: delLogs }  = await supabase.from("deleted_posts_log").select("user_id");
+
+      // Build per-user stats
+      allUsersData = (profiles || []).map(p => {
+        const userPosts    = (posts    || []).filter(x => x.user_id === p.id);
+        const userDel      = (delLogs  || []).filter(x => x.user_id === p.id);
+        const userComments = (comments || []).filter(x => x.user_id === p.id);
+
+        // Likes received on user's posts
+        const userPostIds = userPosts.map(x => x.user_id);
+        const { data: userPostsFull } = { data: posts?.filter(x => x.user_id === p.id) };
+        // Count likes on this user's posts
+        const likesReceived = (likes || []).filter(l =>
+          (posts || []).some(post => post.user_id === p.id)
+        ).length;
+        // More accurate: count likes where post_id belongs to user
+        // We'll compute this properly below
+
+        return {
+          id: p.id,
+          name: `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown",
+          first: p.first_name || "?",
+          role: p.role || "user",
+          created_at: p.created_at,
+          postCount: userPosts.length,
+          deleteCount: userDel.length,
+          commentCount: userComments.length,
+        };
+      });
+
+      // Get posts with user_id to compute likes received properly
+      const { data: allPosts } = await supabase.from("post_crud").select("id, user_id");
+      const { data: allLikes } = await supabase.from("likes").select("post_id");
+
+      allUsersData = allUsersData.map(u => {
+        const userPostIds = (allPosts || []).filter(p => p.user_id === u.id).map(p => p.id);
+        const likesRec = (allLikes || []).filter(l => userPostIds.includes(l.post_id)).length;
+        return { ...u, likesReceived: likesRec };
+      });
+
+      renderUsersTable(allUsersData);
+    }
+
+    function renderUsersTable(data) {
+      const wrap = document.getElementById("usersTableWrap");
+      if (!data.length) {
+        wrap.innerHTML = `<div class="text-center py-4 text-muted">No users found.</div>`; return;
+      }
+      wrap.innerHTML = `
+        <div class="table-responsive">
+          <table class="table admin-table mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Role</th>
+                <th>Posts</th>
+                <th>Likes Received</th>
+                <th>Comments</th>
+                <th>Deleted Posts</th>
+                <th>Joined</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.map((u, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="user-initial">${u.first.charAt(0).toUpperCase()}</div>
+                      <div>
+                        <div style="font-weight:600;">${u.name}</div>
+                        <div style="font-size:12px; color:#aaa;">${u.id.slice(0,8)}…</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-secondary">${u.role}</span></td>
+                  <td><span class="badge-post">📝 ${u.postCount}</span></td>
+                  <td><span class="badge-like">❤️ ${u.likesReceived}</span></td>
+                  <td><span class="badge-com">💬 ${u.commentCount}</span></td>
+                  <td><span class="badge-del">🗑️ ${u.deleteCount}</span></td>
+                  <td style="font-size:12px; color:#888;">${u.created_at ? new Date(u.created_at).toLocaleDateString() : "—"}</td>
+                  <td>
+                    <button class="btn-admin-del" onclick="adminDeleteUserPosts('${u.id}', '${u.name}')">
+                      Delete Posts
+                    </button>
+                  </td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    window.filterUsersTable = (val) => {
+      const filtered = allUsersData.filter(u =>
+        u.name.toLowerCase().includes(val.toLowerCase())
+      );
+      renderUsersTable(filtered);
+    };
+
+    // ── Posts Table ─────────────────────────────────────────
+    let allPostsData = [];
+
+    async function loadPostsTable() {
+      const { data: posts }   = await supabase.from("post_crud")
+        .select("*").order("created_at", { ascending: false });
+      const { data: allLikes } = await supabase.from("likes").select("post_id");
+      const { data: allComments } = await supabase.from("comments").select("post_id");
+
+      allPostsData = (posts || []).map(p => {
+        const likeCount    = (allLikes    || []).filter(l => l.post_id == p.id).length;
+        const commentCount = (allComments || []).filter(c => c.post_id == p.id).length;
+        return { ...p, likeCount, commentCount };
+      });
+      renderPostsTable(allPostsData);
+    }
+
+    function renderPostsTable(data) {
+      const wrap = document.getElementById("postsTableWrap");
+      if (!data.length) {
+        wrap.innerHTML = `<div class="text-center py-4 text-muted">No posts found.</div>`; return;
+      }
+      wrap.innerHTML = `
+        <div class="table-responsive">
+          <table class="table admin-table mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Author</th>
+                <th>Post Preview</th>
+                <th>Likes</th>
+                <th>Comments</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.map((p, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td style="font-weight:600;">${p.first_name || ""} ${p.last_name || ""}</td>
+                  <td style="max-width:220px;">
+                    <div class="post-mini" style="background-image:url('${p.image_url}');">
+                      <div class="post-mini-overlay">
+                        <div class="post-mini-title">${stripHtml(p.title).slice(0, 60)}${stripHtml(p.title).length > 60 ? "…" : ""}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-like">❤️ ${p.likeCount}</span></td>
+                  <td><span class="badge-com">💬 ${p.commentCount}</span></td>
+                  <td style="font-size:12px; color:#888;">${new Date(p.created_at).toLocaleDateString()}</td>
+                  <td>
+                    <button class="btn-admin-del" onclick="adminDeletePost('${p.id}', '${(p.first_name||"")+" "+(p.last_name||"")}')">
+                      Delete
+                    </button>
+                  </td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    window.filterPostsTable = (val) => {
+      const v = val.toLowerCase();
+      const filtered = allPostsData.filter(p =>
+        stripHtml(p.title).toLowerCase().includes(v) ||
+        (`${p.first_name} ${p.last_name}`).toLowerCase().includes(v)
+      );
+      renderPostsTable(filtered);
+    };
+
+    // ── Delete Log ──────────────────────────────────────────
+    async function loadDeleteLog() {
+      const { data } = await supabase.from("deleted_posts_log")
+        .select("*").order("deleted_at", { ascending: false });
+
+      const wrap = document.getElementById("deleteLogWrap");
+      if (!data || data.length === 0) {
+        wrap.innerHTML = `<div class="text-center py-4 text-muted">No deleted posts yet.</div>`; return;
+      }
+
+      wrap.innerHTML = data.map(d => `
+        <div class="del-log-item">
+          <span class="del-log-icon">🗑️</span>
+          <div>
+            <div class="del-log-title">${stripHtml(d.title).slice(0, 80) || "Untitled"}</div>
+            <div class="del-log-meta">
+              User ID: ${d.user_id?.slice(0,10) || "—"}…
+              &nbsp;·&nbsp;
+              Deleted: ${d.deleted_at ? new Date(d.deleted_at).toLocaleString() : "—"}
+            </div>
+          </div>
+        </div>`).join("");
+    }
+
+    // ── Most Liked ──────────────────────────────────────────
+    async function loadMostLiked() {
+      const { data: posts }   = await supabase.from("post_crud").select("*");
+      const { data: allLikes } = await supabase.from("likes").select("post_id");
+
+      const likeCounts = {};
+      (allLikes || []).forEach(l => { likeCounts[l.post_id] = (likeCounts[l.post_id] || 0) + 1; });
+
+      const ranked = (posts || [])
+        .map(p => ({ ...p, likeCount: likeCounts[p.id] || 0 }))
+        .sort((a, b) => b.likeCount - a.likeCount)
+        .slice(0, 10);
+
+      const wrap = document.getElementById("mostLikedWrap");
+      if (!ranked.length) {
+        wrap.innerHTML = `<div class="text-center py-4 text-muted">No posts yet.</div>`; return;
+      }
+
+      wrap.innerHTML = `
+        <div class="table-responsive">
+          <div class="admin-table-wrap">
+            <table class="table admin-table mb-0">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Post</th>
+                  <th>Author</th>
+                  <th>Likes</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ranked.map((p, i) => `
+                  <tr>
+                    <td>
+                      ${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i+1}`}
+                    </td>
+                    <td style="max-width:200px;">
+                      <div class="post-mini" style="background-image:url('${p.image_url}');">
+                        <div class="post-mini-overlay">
+                          <div class="post-mini-title">${stripHtml(p.title).slice(0,55)}…</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-weight:600;">${p.first_name || ""} ${p.last_name || ""}</td>
+                    <td><span class="badge-like" style="font-size:14px;">❤️ ${p.likeCount}</span></td>
+                    <td style="font-size:12px; color:#888;">${new Date(p.created_at).toLocaleDateString()}</td>
+                  </tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+    }
+
+    // ── Admin delete a user's ALL posts ─────────────────────
+    window.adminDeleteUserPosts = async (userId, userName) => {
+      const confirm = await Swal.fire({
+        title: `Delete ALL posts by ${userName}?`,
+        text: "This will permanently delete all their posts.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete all",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "rgb(176,0,18)"
+      });
+      if (!confirm.isConfirmed) return;
+
+      // Log them first
+      const { data: userPosts } = await supabase.from("post_crud")
+        .select("id, title").eq("user_id", userId);
+
+      if (userPosts && userPosts.length > 0) {
+        await supabase.from("deleted_posts_log").insert(
+          userPosts.map(p => ({ post_id: p.id, user_id: userId, title: p.title }))
+        );
+        await supabase.from("post_crud").delete().eq("user_id", userId);
+      }
+
+      Swal.fire({ icon: "success", title: "Done!", text: `All posts by ${userName} deleted.`, timer: 2000, showConfirmButton: false });
+      loadStats(); loadUsersTable(); loadPostsTable(); loadDeleteLog();
+    };
+
+    // ── Admin delete a single post ───────────────────────────
+    window.adminDeletePost = async (postId, authorName) => {
+      const confirm = await Swal.fire({
+        title: `Delete this post by ${authorName.trim()}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "rgb(176,0,18)"
+      });
+      if (!confirm.isConfirmed) return;
+
+      const { data: post } = await supabase.from("post_crud")
+        .select("id, user_id, title").eq("id", postId).single();
+
+      if (post) {
+        await supabase.from("deleted_posts_log").insert({
+          post_id: post.id, user_id: post.user_id, title: post.title
+        });
+        await supabase.from("post_crud").delete().eq("id", postId);
+      }
+
+      Swal.fire({ icon: "success", title: "Post deleted!", timer: 1500, showConfirmButton: false });
+      loadStats(); loadPostsTable(); loadDeleteLog();
+    };
+
+    // ── Logout ───────────────────────────────────────────────
+    window.adminLogout = async () => {
+      sessionStorage.clear();
+      await supabase.auth.signOut();
+      window.location.href = "./form.html";
+    };
+
+    // ── Tabs ─────────────────────────────────────────────────
+    window.showTab = (tabName, el) => {
+      document.querySelectorAll(".tab-pane-admin").forEach(t => t.style.display = "none");
+      document.querySelectorAll(".admin-tabs .nav-link").forEach(l => l.classList.remove("active"));
+      document.getElementById(`tab-${tabName}`).style.display = "block";
+      el.classList.add("active");
+      return false;
+    };
+
+    // ── Helper: strip HTML tags ──────────────────────────────
+    window.stripHtml = (html) => {
+      const div = document.createElement("div");
+      div.innerHTML = html || "";
+      return div.textContent || div.innerText || "";
+    };
+
+  </script>
+</body>
+</html>

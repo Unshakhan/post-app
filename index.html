@@ -1,98 +1,438 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Post app</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post app</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.bubble.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-  <nav class="navbar" id="mainNav">
-  <div class="container-fluid d-flex align-items-center">
-    <span class="navbar-brand mb-0 h1" id="navBrand"><img src="./1-removebg-preview.png" alt="" width="150px " height="150px" id="mypostimg"></span>
-      <div class="d-flex align-items-center gap-2 ms-auto">
-      <button onclick="myPosts()" class="btn btn-warning" id="myPostsBtn">My Posts</button>
+  <!-- ── Toast Container ── -->
+<div id="toastContainer" style="
+  position:fixed; bottom:24px; right:24px;
+  z-index:99999; display:flex;
+  flex-direction:column; gap:10px;
+  pointer-events:none;
+"></div>
+  <!-- ── Welcome Screen ── -->
+<!-- ── Welcome Screen ── -->
+<div id="welcomeScreen" style="
+  position:fixed; inset:0; z-index:9999;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  pointer-events:none; opacity:0;
+  transition: opacity 0.6s ease;
+  background: radial-gradient(ellipse at center, rgba(176,0,18,0.08) 0%, transparent 70%);
+">
+  <!-- Rings -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+    <div class="welcome-ring" style="animation-delay:0s;"></div>
+    <div class="welcome-ring" style="animation-delay:0.4s;"></div>
+    <div class="welcome-ring" style="animation-delay:0.8s;"></div>
+  </div>
 
-      <div class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchVal"/>
-        <button class="btn btn-outline-success" onclick="search()">Search</button>
+  <!-- Emoji -->
+  <div id="welcomeEmoji" style="
+    font-size:80px;
+    animation: emojiBounce 0.7s cubic-bezier(.175,.885,.32,1.275) both;
+    filter: drop-shadow(0 8px 24px rgba(176,0,18,0.3));
+    position:relative; z-index:2;
+  ">👋</div>
+
+  <!-- Main text -->
+  <div id="welcomeText" style="
+    font-size:46px; font-weight:900;
+    background: linear-gradient(135deg, rgb(176,0,18) 0%, rgb(255,97,100) 50%, rgb(255,200,100) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top:16px;
+    text-align:center;
+    letter-spacing:-1px;
+    animation: textSlideUp 0.6s 0.25s cubic-bezier(.175,.885,.32,1.275) both;
+    position:relative; z-index:2;
+  ">Welcome!</div>
+
+  <!-- Name -->
+  <div id="welcomeName" style="
+    font-size:24px; font-weight:700;
+    color: rgb(176,0,18);
+    margin-top:10px;
+    animation: textSlideUp 0.6s 0.45s cubic-bezier(.175,.885,.32,1.275) both;
+    position:relative; z-index:2;
+    text-shadow: 0 2px 12px rgba(176,0,18,0.2);
+  "></div>
+
+  <!-- Subtext -->
+  <div id="welcomeSubtext" style="
+    font-size:15px; font-weight:500;
+    color:#888;
+    margin-top:10px;
+    animation: textSlideUp 0.6s 0.65s cubic-bezier(.175,.885,.32,1.275) both;
+    position:relative; z-index:2;
+  "></div>
+
+  <!-- Sparkles -->
+  <div id="sparkleWrap" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1;"></div>
+
+  <!-- Confetti -->
+  <div id="confettiWrap" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1;"></div>
+</div>
+<!-- ── Floating Bubbles ── -->
+<div class="bubble" style="width:80px;height:80px;left:8%;animation-duration:12s;animation-delay:0s;"></div>
+<div class="bubble" style="width:50px;height:50px;left:20%;animation-duration:9s;animation-delay:2s;"></div>
+<div class="bubble" style="width:120px;height:120px;left:75%;animation-duration:14s;animation-delay:1s;"></div>
+<div class="bubble" style="width:40px;height:40px;left:60%;animation-duration:8s;animation-delay:4s;"></div>
+<div class="bubble" style="width:90px;height:90px;left:40%;animation-duration:11s;animation-delay:3s;"></div>
+<div class="bubble" style="width:60px;height:60px;left:88%;animation-duration:10s;animation-delay:1.5s;"></div>
+<div class="bubble" style="width:35px;height:35px;left:5%;animation-duration:7s;animation-delay:5s;"></div>
+
+<!-- ── Stars (dark mode only) ── -->
+<div class="stars-bg" id="starsBg"></div>
+  <!-- ══════════ NAVBAR ══════════ -->
+  <nav class="navbar navbar-expand-lg" id="mainNav" style="position:sticky; top:0; z-index:1000;">
+    <div class="container-fluid">
+
+      <!-- Logo -->
+      <a class="navbar-brand">
+        <img src="./1-removebg-preview.png" width="150" height="150" id="mypostimg">
+      </a>
+
+      <!-- Hamburger -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible Content -->
+ <div class="collapse navbar-collapse" id="navbarContent">
+  <div class="ms-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 navbar-inner-wrap">
+
+    <button onclick="myPosts()" class="btn btn-warning">My Posts</button>
+
+    <div class="d-flex">
+      <input class="form-control me-2" type="search" placeholder="Search" id="searchVal">
+      <button class="btn btn-outline-success" onclick="search()">Search</button>
+    </div>
+
+    <!-- Icon Row: Bell + Moon + Avatar -->
+    <div class="d-flex flex-row align-items-center gap-2 icon-row-wrap">
+
+      <!-- 🔔 Notification Bell -->
+      <div style="position:relative; flex-shrink:0;">
+        <button id="notifBtn" onclick="toggleNotifPanel()" title="Notifications"
+          style="background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.5);
+                 border-radius:50%; width:40px; height:40px; font-size:18px; cursor:pointer;
+                 display:flex; align-items:center; justify-content:center; transition:all 0.3s ease;">
+          🔔
+        </button>
+        <span id="notifBadge" style="
+          display:none; position:absolute; top:-4px; right:-4px;
+          background:rgb(176,0,18); color:white; font-size:10px; font-weight:800;
+          width:18px; height:18px; border-radius:50%;
+          align-items:center; justify-content:center;
+          border:2px solid white; animation: badgePop 0.3s cubic-bezier(.175,.885,.32,1.275) both;">0</span>
       </div>
 
-      <button class="btn btn-danger" onclick="logout()">Logout</button>
+      <!-- 🌙 Dark Mode Toggle -->
+      <button id="themeToggleBtn" onclick="toggleTheme()" title="Toggle dark mode"
+        style="background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.5);
+               border-radius:50%; width:40px; height:40px; font-size:18px; cursor:pointer;
+               display:flex; align-items:center; justify-content:center;
+               transition:all 0.3s ease; flex-shrink:0;">
+        ☀️
+      </button>
+
+      <!-- 👤 Profile Avatar -->
+      <div style="position:relative; flex-shrink:0;">
+        <button id="navAvatarBtn" onclick="toggleProfilePopup()"
+          style="background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.5);
+                 border-radius:50%; width:42px; height:42px; cursor:pointer;
+                 display:flex; align-items:center; justify-content:center; overflow:hidden;
+                 box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:all 0.3s ease;"
+          title="My Profile">
+        </button>
+      </div>
+
+    </div><!-- end icon-row-wrap -->
+  </div><!-- end ms-auto -->
+</div><!-- end navbar-collapse -->
+
+<!-- ═══ Notification Panel ═══ -->
+<div id="notifPanel" style="
+  display:none; position:fixed; top:80px; right:16px;
+  width:340px; max-height:480px;
+  background:white; border-radius:20px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.15);
+  border:1px solid #e8e8e8; z-index:9000;
+  overflow:hidden; animation: notifSlideIn 0.35s cubic-bezier(.175,.885,.32,1.275) both;">
+  <div style="
+    padding:16px 18px; display:flex; align-items:center;
+    border-bottom:1px solid #f0f0f0;
+    background:linear-gradient(135deg,rgb(176,0,18),rgb(255,97,100));">
+    <span style="color:white;font-size:15px;font-weight:800;">🔔 Notifications</span>
+    <button onclick="markAllRead()" style="
+      margin-left:auto; background:rgba(255,255,255,0.2);
+      border:1px solid rgba(255,255,255,0.4); color:white;
+      border-radius:8px; padding:4px 12px; font-size:11px;
+      font-weight:700; cursor:pointer; transition:all 0.2s;">Mark all read</button>
+  </div>
+  <div id="notifList" style="overflow-y:auto; max-height:400px;"></div>
+</div>
+
+<!-- ═══ Profile Popup ═══ -->
+<div id="profilePopup" style="display:none; position:fixed; top:75px; right:20px; width:240px; border-radius:16px; box-shadow:0 12px 40px rgba(0,0,0,0.18); border:1px solid #e8e8e8; z-index:9500; overflow:hidden;">
+  <div style="padding:16px; background:linear-gradient(135deg,rgb(176,0,18),rgb(255,97,100)); color:white; display:flex; align-items:center; gap:12px;">
+    <div id="popupAvatarNav" style="width:48px;height:48px;border-radius:50%;border:2px solid white;overflow:hidden;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#d32f2f;"></div>
+    <div>
+      <div id="popupNameNav" style="font-weight:700;font-size:15px;">Loading...</div>
+      <div id="popupEmailNav" style="font-size:12.5px;opacity:0.9;"></div>
     </div>
   </div>
-</nav>
-   
-    <!-- ========================================== -->
-     <div class="container text-center">
-  <div class="row">
-     <div class=" col-5 my-5 postCardContainer" id="postCardContainer">
-
-  <div class="card shadow p-4" style="max-width: 450px; ">
-      
-      <h4 class="mb-3 text-center fw-bold">My Post</h4>
-
-      <!-- Input Fields -->
-      <div class="mb-3">
-        <label class="form-label">Topic</label>
-        <input type="text" id="topicInput" class="form-control">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">comment</label>
-        <input type="text"  id="commentInput" class="form-control">
-      </div>
-
-      <hr>
-
-      <!-- Small Clickable Images -->
-      <p class="mb-1 fw-semibold">Select background:</p>
-
-      <div class="d-flex gap-2 " style="overflow-x: scroll;">
-
-        <img src="https://img.freepik.com/free-vector/neutral-watercolor-background_23-2150564038.jpg?semt=ais_hybrid&w=740&q=80" width="80px"
-             class="img-thumbnail avatar-img" id="bg1" onclick="selectAvatar(this)" >
-        
-        <img src="https://media.istockphoto.com/id/1661184650/vector/autumn-leaves-background.jpg?s=612x612&w=0&k=20&c=RLVv440s9cf1YACDwti6OGmJ77VWT-NMaZUEiHic5mY=" width="80px"
-             class="img-thumbnail avatar-img" id="bg2" onclick="selectAvatar(this)">
-        
-        <img src="https://i.pinimg.com/736x/74/4b/40/744b40d8807b31e44e875456ed163c58.jpg" width="80px"
-             class="img-thumbnail avatar-img" id="bg3" onclick="selectAvatar(this)">
-        
-        <img src="https://t4.ftcdn.net/jpg/09/46/17/07/360_F_946170714_b6KOvYbSS39TJ5d0rSjffDQttzKIxyFm.jpg" width="80px"
-             class="img-thumbnail avatar-img" id="bg4" onclick="selectAvatar(this)">
-      
-        <img src="https://i.pinimg.com/736x/6e/64/8c/6e648c87a585a8c9795fe238378b17f9.jpg" width="80px"
-             class="img-thumbnail avatar-img" id="bg5" onclick="selectAvatar(this)">
-      
-        <img src="https://thumbs.dreamstime.com/b/sparkly-kawaii-bubble-tea-cute-face-straw-dreamy-pink-background-glittery-smiling-soft-focus-concept-drink-398264087.jpg" width="80px"
-             class="img-thumbnail avatar-img" id="bg6" onclick="selectAvatar(this)">
-      
-      </div>
-
-     <button class="btn  w-100 mt-3" id="savebtn" onclick="createPost()">Save</button>
-
-  </div>
-
+  <button onclick="goToProfile()" class="popup-btn"
+    style="width:100%;padding:14px 20px;text-align:left;border:none;background:none;font-size:14.5px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid #f0f0f0;transition:background 0.2s ease;">
+    👤 My Profile
+  </button>
+  <button onclick="logout()" class="popup-btn popup-btn-logout"
+    style="width:100%;padding:14px 20px;text-align:left;border:none;background:none;font-size:14.5px;cursor:pointer;display:flex;align-items:center;gap:12px;color:#d32f2f;transition:background 0.2s ease;">
+    🚪 Logout
+  </button>
 </div>
-<!-- ============================== -->
-<!-- POST WILL APPEAR HERE -->
-<div id="postContainer" class="mt-5 col-7"></div>
+    </div>
+  </nav>
+
+  <!-- ══════════ MAIN CONTENT ══════════ -->
+  <div class="container text-center">
+    <div class="row">
+
+      <!-- Post Creator Card -->
+      <div class="col-12 col-sm-12 col-md-5 col-lg-5 my-5 postCardContainer" id="postCardContainer">
+        <div class="card shadow p-4 post-creator-card" style="max-width: 450px;">
+
+          <h4 class="mb-3 text-center fw-bold creator-title">✍️ My Post</h4>
+
+          <div class="mb-3">
+            <label class="form-label creator-label">Topic</label>
+            <div id="topicInput" class="form-control quill-input" style="min-height: 42px; height: auto;"></div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label creator-label">Comment</label>
+            <div id="commentInput" class="form-control quill-input" style="min-height: 80px; height: auto;"></div>
+          </div>
+
+          <hr class="creator-divider">
+
+          <p class="mb-1 fw-semibold creator-label">Select background:</p>
+          <div class="mb-3">
+            <input type="file" class="form-control" id="background-image" accept="image/*"/>
+          </div>
+
+          <div class="d-flex gap-2" style="overflow-x: scroll;">
+            <img src="https://img.freepik.com/free-vector/neutral-watercolor-background_23-2150564038.jpg?semt=ais_hybrid&w=740&q=80"
+                 width="80px" class="img-thumbnail avatar-img" id="bg1" onclick="selectAvatar(this)">
+            <img src="https://media.istockphoto.com/id/1661184650/vector/autumn-leaves-background.jpg?s=612x612&w=0&k=20&c=RLVv440s9cf1YACDwti6OGmJ77VWT-NMaZUEiHic5mY="
+                 width="80px" class="img-thumbnail avatar-img" id="bg2" onclick="selectAvatar(this)">
+            <img src="https://i.pinimg.com/736x/74/4b/40/744b40d8807b31e44e875456ed163c58.jpg"
+                 width="80px" class="img-thumbnail avatar-img" id="bg3" onclick="selectAvatar(this)">
+            <img src="https://t4.ftcdn.net/jpg/09/46/17/07/360_F_946170714_b6KOvYbSS39TJ5d0rSjffDQttzKIxyFm.jpg"
+                 width="80px" class="img-thumbnail avatar-img" id="bg4" onclick="selectAvatar(this)">
+            <img src="https://i.pinimg.com/736x/6e/64/8c/6e648c87a585a8c9795fe238378b17f9.jpg"
+                 width="80px" class="img-thumbnail avatar-img" id="bg5" onclick="selectAvatar(this)">
+            <img src="https://thumbs.dreamstime.com/b/sparkly-kawaii-bubble-tea-cute-face-straw-dreamy-pink-background-glittery-smiling-soft-focus-concept-drink-398264087.jpg"
+                 width="80px" class="img-thumbnail avatar-img" id="bg6" onclick="selectAvatar(this)">
+          </div>
+
+          <button class="btn w-100 mt-3" id="savebtn" onclick="createPost()">💾 Save Post</button>
+        </div>
+      </div>
+
+      <!-- Post Feed -->
+      <div id="postContainer" class="mt-5 col-12 col-sm-12 col-md-7 col-lg-7" style="overflow-y:auto;"></div>
+
+    </div>
   </div>
-     </div>
-     <!-- supabase cdn -->
-     <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
-     <!-- sweet alert cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-        <script type="module" src="app.js"></script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script type="module" src="app.js"></script>
+
+  <!-- Quill -->
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+  <script>
+  /* ── Generate Stars ── */
+  (function(){
+    const el = document.getElementById('starsBg');
+    if (!el) return;
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const sz = (1 + Math.random() * 2.5) + 'px';
+      s.style.cssText = `left:${Math.random()*99}%;top:${Math.random()*99}%;width:${sz};height:${sz};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s`;
+      el.appendChild(s);
+    }
+  })();
+
+  /* ── Dark Mode ── */
+  function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeToggleBtn').textContent = isDark ? '🌙' : '☀️';
+  }
+  (function () {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      document.body.classList.add('dark-mode');
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = '🌙';
+    }
+  })();
+  window.toggleTheme = toggleTheme;
+
+  /* ── Quill Setup ── */
+  const SizeStyle = Quill.import('attributors/style/size');
+  SizeStyle.whitelist = ['12px','14px','16px','18px','20px','24px','28px','32px'];
+  Quill.register(SizeStyle, true);
+
+  const FontStyle = Quill.import('attributors/style/font');
+  FontStyle.whitelist = ['Arial','Georgia','Courier New','Verdana','Trebuchet MS'];
+  Quill.register(FontStyle, true);
+
+  const toolbar = [
+    [{ 'size': ['12px','14px','16px','18px','20px','24px','28px','32px'] }],
+    [{ 'font': ['Arial','Georgia','Courier New','Verdana','Trebuchet MS'] }],
+    ['bold', 'italic', 'underline'],
+    [{ 'color': [] }, { 'background': [] }],
+    ['clean']
+  ];
+
+  function makeQuill(selector, placeholder) {
+    const q = new Quill(selector, {
+      theme: 'bubble',
+      modules: { toolbar },
+      placeholder
+    });
+
+    const emojiList = ['😊','😂','❤️','🔥','✨','👍','🎉','😍','🙌','💯','😎','🥳','😢','🤔','👏','🫶','🌟','💪','🤩','😅'];
+    const emojiBtn = document.createElement('span');
+    emojiBtn.classList.add('ql-formats');
+    emojiBtn.innerHTML = `<button class="ql-emoji-btn" title="Emoji" style="width:auto;padding:0 6px;font-size:15px;">😊</button>`;
+    q.getModule('toolbar').container.appendChild(emojiBtn);
+
+    let activePicker = null;
+    let lastIndex = 0;
+
+    q.on('selection-change', (range) => { if (range) lastIndex = range.index; });
+
+    emojiBtn.querySelector('.ql-emoji-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activePicker) { activePicker.remove(); activePicker = null; return; }
+
+      const picker = document.createElement('div');
+      const isDark = document.body.classList.contains('dark-mode');
+      picker.style.cssText = `
+        position:fixed; background:${isDark ? '#1e1e28' : '#fff'};
+        border:1px solid ${isDark ? '#2a2a35' : '#ddd'};
+        border-radius:10px; padding:8px; display:flex; flex-wrap:wrap;
+        gap:4px; width:220px; z-index:99999;
+        box-shadow:0 4px 16px rgba(0,0,0,0.18);
+      `;
+      emojiList.forEach(em => {
+        const span = document.createElement('span');
+        span.textContent = em;
+        span.style.cssText = 'cursor:pointer;font-size:20px;padding:3px;border-radius:4px;transition:background 0.15s;';
+        span.onmouseenter = () => span.style.background = isDark ? '#2a2a38' : '#f0f0f0';
+        span.onmouseleave = () => span.style.background = 'transparent';
+        span.onclick = (ev) => {
+          ev.stopPropagation();
+          q.focus();
+          q.insertText(lastIndex, em);
+          lastIndex += em.length;
+          picker.remove(); activePicker = null;
+        };
+        picker.appendChild(span);
+      });
+
+      document.body.appendChild(picker);
+      activePicker = picker;
+      const rect = emojiBtn.getBoundingClientRect();
+      picker.style.top  = (rect.bottom + 6) + 'px';
+      picker.style.left = rect.left + 'px';
+
+      setTimeout(() => {
+        document.addEventListener('click', () => { picker.remove(); activePicker = null; }, { once: true });
+      }, 100);
+    });
+
+    return q;
+  }
+
+  /* ── Welcome Screen ── */
+  window.showWelcomeScreen = function(isNewUser, firstName) {
+    const screen   = document.getElementById('welcomeScreen');
+    const nameEl   = document.getElementById('welcomeName');
+    const textEl   = document.getElementById('welcomeText');
+    const subEl    = document.getElementById('welcomeSubtext');
+    const emojiEl  = document.getElementById('welcomeEmoji');
+    const confetti = document.getElementById('confettiWrap');
+    const sparkles = document.getElementById('sparkleWrap');
+
+    if (isNewUser) {
+      textEl.textContent  = 'Welcome! 🎊';
+      emojiEl.textContent = '🎉';
+      subEl.textContent   = 'Your account is all set. Start posting!';
+    } else {
+      textEl.textContent  = 'Welcome Back!';
+      emojiEl.textContent = '👋';
+      subEl.textContent   = 'Great to see you again ✨';
+    }
+
+    nameEl.textContent = firstName ? `Hey, ${firstName}! 😊` : '';
+    screen.style.display = 'flex';
+    requestAnimationFrame(() => { screen.style.opacity = '1'; });
+
+    const sparkleEmojis = ['✨','⭐','💫','🌟','❤️','🔥'];
+    for (let i = 0; i < 18; i++) {
+      const sp = document.createElement('div');
+      sp.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+      sp.style.cssText = `position:absolute;font-size:${14+Math.random()*20}px;left:${Math.random()*100}%;top:${40+Math.random()*40}%;animation:sparkleFloat ${1+Math.random()*1.5}s ${Math.random()*1}s ease forwards;pointer-events:none;`;
+      sparkles.appendChild(sp);
+    }
+
+    if (isNewUser) {
+      const colors = ['#B00012','#FF6164','#FFFFC4','#ff8080','#fff','#FFD700','#ff4444'];
+      const shapes = ['50%','3px','0'];
+      for (let i = 0; i < 80; i++) {
+        const dot = document.createElement('div');
+        const size = 5 + Math.random() * 12;
+        dot.style.cssText = `position:absolute;width:${size}px;height:${size*(Math.random()>0.5?1:0.4)}px;border-radius:${shapes[Math.floor(Math.random()*shapes.length)]};background:${colors[Math.floor(Math.random()*colors.length)]};left:${Math.random()*100}%;top:-20px;animation:confettiFall ${1.2+Math.random()*2.5}s ${Math.random()*1}s ease-in forwards;opacity:0.9;`;
+        confetti.appendChild(dot);
+      }
+    }
+
+    setTimeout(() => {
+      screen.style.opacity = '0';
+      setTimeout(() => {
+        screen.style.display = 'none';
+        confetti.innerHTML = '';
+        sparkles.innerHTML = '';
+      }, 600);
+    }, 3500);
+  };
+
+  /* ── ✅ Quill instances — direct, DOMContentLoaded nahi ── */
+  window.topicQuill   = makeQuill('#topicInput',   'Topic likhein...');
+  window.commentQuill = makeQuill('#commentInput', 'Comment likhein...');
+
+</script>
+
+<!-- ✅ app.js sabse last mein -->
+<script type="module" src="app.js"></script>
 </body>
-
 </html>

@@ -1,89 +1,325 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Post App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="form.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
 </head>
-
 <body>
- <div class="container">
-    <div id="signUpDiv">
-    <div class="modal modal-sheet  d-block bg-body-secondary p-4 py-md-5 " tabindex="-1" role="dialog"
-        >
-        <div class="modal-dialog">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header p-5 pb-4 border-bottom-0">
-                    <h1 class="mx-auto fw-bold mb-0 fs-2 ">Sign up for free</h1> 
-                </div>
-                <div class="modal-body p-5 pt-0">
-                    <form class="">
-                         <div class="form-floating mb-3"> <input type="text" class="form-control rounded-3"
-                                id="floatingFirstName" placeholder="First Name"> <label
-                                for="floatingFirstName">First Name</label> </div>
-                                  <div class="form-floating mb-3"> <input type="text" class="form-control rounded-3"
-                                id="floatingLastName" placeholder="Last Name"> <label
-                                for="floatingLastName">Last Name</label> </div>
-                        <div class="form-floating mb-3"> <input type="email" class="form-control rounded-3"
-                                id="floatingInput" placeholder="name@example.com"> <label for="floatingInput">Email
-                                address</label> </div>
-                        <div class="form-floating mb-3"> <input type="password" class="form-control rounded-3"
-                                id="floatingPassword" placeholder="Password"> <label
-                                for="floatingPassword">Password</label> </div>
-                                
-                                <button
-                            class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="submitInfo(event)">Sign up</button> 
-                            <small class="text-body-secondary">If already have an account, <a href="javascript:void(0)" onclick="display()">Sign in</a></small>
-                        <hr class="my-4">
-                      
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <div id="loginDiv" class="hidden">
-    <div class="modal modal-sheet  d-block bg-body-secondary p-5 " tabindex="-1" role="dialog"
-        >
-        <div class="modal-dialog rounded-4 shadow">
-            <div class="modal-content rounded-4 shadow ">
-                <div class="modal-header p-5 pb-4 border-bottom-0">
-                    <h1 class="mx-auto fw-bold mb-0 fs-2 ">Sign In</h1> 
-                </div>
-                <div class="modal-body p-5 pt-0">
-                    <form class="">
-                         
-                        <div class="form-floating mb-3"> <input type="email" class="form-control rounded-3"
-                                id="LoginEmail" placeholder="name@example.com"> <label for="LoginEmail">Email
-                                address</label> </div>
-                        <div class="form-floating mb-3"> <input type="password" class="form-control rounded-3"
-                                id="LogInPassword" placeholder="Password"> <label
-                                for="LogInPassword">Password</label> </div>
-                                
-                                <button
-                            class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" onclick="login(event)">Sign in</button> 
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-    <!-- ========================================== -->
-    
-     <!-- supabase cdn -->
-     <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
-     <!-- sweet alert cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="eyes-container" id="eyesContainer">
+  <img src="https://i.pinimg.com/originals/c5/eb/05/c5eb05561c26dcd11228ed33cd3e707c.gif" alt="watching eyes" />
+</div>
+  <!-- Stars background -->
+  <div class="stars-bg" id="starsBg"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-        <script type="module" src="app.js"></script>
+  <!-- ── Floating Bubbles ── -->
+  <div class="bubble" style="width:80px;height:80px;left:8%;animation-duration:12s;animation-delay:0s;"></div>
+  <div class="bubble" style="width:50px;height:50px;left:20%;animation-duration:9s;animation-delay:2s;"></div>
+  <div class="bubble" style="width:120px;height:120px;left:75%;animation-duration:14s;animation-delay:1s;"></div>
+  <div class="bubble" style="width:40px;height:40px;left:60%;animation-duration:8s;animation-delay:4s;"></div>
+  <div class="bubble" style="width:90px;height:90px;left:40%;animation-duration:11s;animation-delay:3s;"></div>
+  <div class="bubble" style="width:60px;height:60px;left:88%;animation-duration:10s;animation-delay:1.5s;"></div>
+  <div class="bubble" style="width:35px;height:35px;left:5%;animation-duration:7s;animation-delay:5s;"></div>
+
+  <!-- ══════════════════════════════════
+       PAGE LAYOUT
+  ══════════════════════════════════ -->
+  <div class="page-layout">
+
+    <!-- Hanging Lamp -->
+    <div class="lamp-side" id="lampSide" onclick="toggleLamp()" title="Click to toggle light">
+      <div class="lamp-rope"></div>
+      <div class="lamp-rim"></div>
+      <div class="lamp-shade"></div>
+      <div class="lamp-bulb"></div>
+      <div class="lamp-glow"></div>
+    </div>
+
+    <!-- Booklet -->
+    <div class="book-wrap" style="align-self:center;padding-top:24px;">
+    <div class="book">
+
+      <!-- Spine -->
+      <div class="spine"></div>
+
+      <!-- Left Branding Panel -->
+      <div class="left-panel">
+        <div class="left-top">
+          <div class="left-logo">✍️</div>
+          <h1>Your story<br>starts here.</h1>
+          <p>Join thousands of creators sharing ideas, building communities, and making things that matter.</p>
+          <div class="feature-list">
+            <div class="feat">
+              <div class="feat-dot">⚡</div>
+              Instant publishing
+            </div>
+            <div class="feat">
+              <div class="feat-dot">❤️</div>
+              Real-time reactions
+            </div>
+            <div class="feat">
+              <div class="feat-dot">🛡️</div>
+              Secure by default
+            </div>
+            <div class="feat">
+              <div class="feat-dot">👥</div>
+              Growing community
+            </div>
+          </div>
+        </div>
+        <div class="left-bottom">Post App &copy; 2025 &nbsp;&middot;&nbsp; Free forever</div>
+      </div>
+
+      <!-- Right Form Panel -->
+      <div class="right-panel">
+
+        <!-- Tab Row -->
+        <div class="tab-row">
+          <button class="tab-btn active" id="tabSignup" onclick="showTab('signup')">Create Account</button>
+          <button class="tab-btn"        id="tabLogin"  onclick="showTab('login')">Sign In</button>
+        </div>
+
+        <!-- ── SIGNUP SECTION ── -->
+        <div class="form-section active" id="sectionSignup">
+          <div class="panel-title">Welcome aboard 👋</div>
+          <div class="panel-sub">Set up your account in seconds</div>
+
+          <div class="name-row">
+            <div class="field">
+              <label>First Name</label>
+              <div class="field-wrap">
+                <span class="fi">👤</span>
+                <input type="text" id="floatingFirstName" placeholder="First name">
+              </div>
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <div class="field-wrap">
+                <span class="fi">👤</span>
+                <input type="text" id="floatingLastName" placeholder="Last name">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <div class="field-wrap">
+              <span class="fi">📧</span>
+              <input type="email" id="floatingInput" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="field-wrap">
+              <span class="fi">🔑</span>
+              <input type="password" id="floatingPassword" placeholder="Min. 8 characters">
+              <button class="eye-toggle" type="button" onclick="toggleEye('floatingPassword', this)">👁️</button>
+            </div>
+          </div>
+
+          <!-- Admin Code -->
+          <div class="admin-row">
+            <span class="admin-row-icon">🛡️</span>
+            <input type="password" id="adminSecretCode" placeholder="Admin code (optional)"
+                   oninput="toggleAdminCodeState(this)">
+            <button class="admin-eye" type="button" onclick="toggleEye('adminSecretCode', this)">👁️</button>
+          </div>
+          <p class="admin-hint-text">🔒 Leave empty if you are a regular user</p>
+
+          <!-- Google -->
+          <div class="divider-or">or continue with</div>
+          <button class="btn-google" type="button" onclick="continueWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <!-- Submit -->
+          <button class="btn-auth-primary" type="button" id="signupBtn" onclick="handleSignup(event)">
+            Create Account
+          </button>
+
+          <div class="auth-switch">
+            Already have an account?
+            <a href="javascript:void(0)" onclick="showTab('login')">Sign in</a>
+          </div>
+
+          <div class="page-dots" aria-hidden="true">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+
+        <!-- ── LOGIN SECTION ── -->
+        <div class="form-section" id="sectionLogin">
+          <div class="panel-title">Welcome back 🔐</div>
+          <div class="panel-sub">Good to see you again</div>
+
+          <div class="field">
+            <label>Email</label>
+            <div class="field-wrap">
+              <span class="fi">📧</span>
+              <input type="email" id="LoginEmail" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="field-wrap">
+              <span class="fi">🔑</span>
+              <input type="password" id="LogInPassword" placeholder="Your password">
+              <button class="eye-toggle" type="button" onclick="toggleEye('LogInPassword', this)">👁️</button>
+            </div>
+          </div>
+
+          <!-- Google -->
+          <div class="divider-or">or continue with</div>
+          <button class="btn-google" type="button" onclick="continueWithGoogle()">
+            <svg class="google-icon" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <!-- Submit -->
+          <button class="btn-auth-primary" type="button" id="loginBtn" onclick="handleLogin(event)">
+            Sign In
+          </button>
+
+          <div class="auth-switch">
+            Don't have an account?
+            <a href="javascript:void(0)" onclick="showTab('signup')">Sign up</a>
+          </div>
+
+          <div class="page-dots" aria-hidden="true">
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+
+      </div><!-- /right-panel -->
+    </div><!-- /book -->
+    </div><!-- /book-wrap -->
+  </div><!-- /page-layout -->
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ── Tab switcher ── */
+    function showTab(tab) {
+      ['signup', 'login'].forEach(t => {
+        const capT = t.charAt(0).toUpperCase() + t.slice(1);
+        document.getElementById('section' + capT).classList.toggle('active', t === tab);
+        document.getElementById('tab'     + capT).classList.toggle('active', t === tab);
+      });
+    }
+
+    /* ── Eye toggle ── */
+    function toggleEye(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    /* ── Admin code border highlight ── */
+    function toggleAdminCodeState(input) {
+      input.style.borderColor = input.value.length > 0 ? '#B00012' : 'transparent';
+    }
+
+    /* ── Button loading state ── */
+    function setLoading(btnId, loading, defaultText) {
+      const btn = document.getElementById(btnId);
+      btn.disabled = loading;
+      btn.innerHTML = loading
+        ? `<span class="btn-spinner"></span>${defaultText === 'Create Account' ? 'Creating Account...' : 'Signing In...'}`
+        : defaultText;
+    }
+
+    /* ── Signup handler ── */
+    function handleSignup(event) {
+      setLoading('signupBtn', true, 'Create Account');
+      submitInfo(event).finally(() => setLoading('signupBtn', false, 'Create Account'));
+    }
+
+    /* ── Login handler ── */
+    function handleLogin(event) {
+      setLoading('loginBtn', true, 'Sign In');
+      login(event).finally(() => setLoading('loginBtn', false, 'Sign In'));
+    }
+
+    /* ── Called from app.js after signup success ── */
+    window.display = function () { showTab('login'); };
+
+    /* ── Stars ── */
+    (function(){
+      const el = document.getElementById('starsBg');
+      for(let i = 0; i < 50; i++){
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = (0.8 + Math.random() * 1.6) + 'px';
+        s.style.cssText = `left:${Math.random()*99}%;top:${Math.random()*99}%;width:${sz};height:${sz};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s`;
+        el.appendChild(s);
+      }
+    })();
+
+  let lampOn = localStorage.getItem('theme') === 'dark';
+document.body.classList.toggle('lights-off', lampOn);
+
+ function toggleLamp() {
+  lampOn = !lampOn;
+
+  if (!lampOn) {
+    // Dark → Light: pehle eyes hide karo, phir theme change
+    const eyes = document.getElementById('eyesContainer');
+    eyes.style.transition = 'opacity 0.4s ease';
+    eyes.style.opacity = '0';
+    setTimeout(() => {
+      document.body.classList.remove('lights-off');
+      localStorage.setItem('theme', 'light');
+      // Inline style remove karo taake CSS dobara control le
+      setTimeout(() => {
+        eyes.style.opacity = '';
+        eyes.style.transition = '';
+      }, 100);
+    }, 400);
+  }  else {
+    // Light → Dark: pehle theme change, phir eyes slowly appear
+    const eyes = document.getElementById('eyesContainer');
+    eyes.style.opacity = '0';
+    eyes.style.transition = '';
+    document.body.classList.add('lights-off');
+    localStorage.setItem('theme', 'dark');
+    // Background change ke baad eyes fade in
+    setTimeout(() => {
+      eyes.style.transition = 'opacity 1.2s ease';
+      eyes.style.opacity = '';
+    }, 1200);
+  }
+}
+  </script>
+
+  <script type="module" src="app.js"></script>
 </body>
-
 </html>
